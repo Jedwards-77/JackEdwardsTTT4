@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+<style>
+
+h1{
+    font-family: 'Franklin Gothic Medium';
+    font-size: 50px;
+    text-align: center;
+}
+
+.turn{
+    font-family: 'Franklin Gothic Medium';
+    font-size: 30px;
+    text-align: center;
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    outline: auto;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.square{
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 65px;
+    font-weight: bold;
+    background-color: white;
+    outline: auto;
+    cursor: pointer;
+}
+
+.square:hover {
+  background-color: grey;
+}
+
+.grid {
+        display: flex;
+        flex-wrap: wrap;
+        width: 400px;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+        }
+
+.winCondition {
+    font-family: 'Franklin Gothic Medium';
+    font-size: 30px;
+    text-align: center;
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    outline: auto;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+
+.startGame {
+    font-family: 'Franklin Gothic Medium';
+    font-size: 30px;
+    text-align: center;
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    outline: auto;
+    flex-wrap: wrap;
+    margin: auto;
+    cursor: pointer;
+}
+
+.startGame:hover {
+  background-color: grey;
+}
+
+</style>
+<h1>Tic Tac Toe!</h1>
+<div class = 'turn' id = "turn"></div>
+<br>
+<div class = 'grid'>
+
+<script>
+
+var playerTurn = 'X';
+var moves = ['-','-','-','-','-','-','-','-','-'];
+var winConditions = [];
+
+function movesUpdate()
+{
+    boxes.forEach(element => {
+        let moveBox = document.getElementById(element).innerHTML;
+        if(moveBox !== '')
+        moves[element.substring(2,3)] = moveBox;
+    });
+}
+
+function winConditionsUpdate()
+{
+    winConditions[0] = moves[0] + moves[1] + moves[2];
+    winConditions[1] = moves[3] + moves[4] + moves[5];
+    winConditions[2] = moves[6] + moves[7] + moves[8];
+    winConditions[3] = moves[0] + moves[3] + moves[6];
+    winConditions[4] = moves[1] + moves[4] + moves[7];
+    winConditions[5] = moves[2] + moves[5] + moves[8];
+    winConditions[6] = moves[0] + moves[4] + moves[8];
+    winConditions[7] = moves[2] + moves[4] + moves[6];
+}
+
+
+if(Math.random() >= 0.5)
+{
+    playerTurn = 'O';
+    document.getElementById("turn").innerHTML = "Player O Turn";
+}
+else
+{
+    document.getElementById("turn").innerHTML = "Player X Turn";
+}
+
+
+var gameOver = false;
+var moveCount = 0;
+var boxes = [];
+const NUM_SQUARES = 9;
+for (i=0; i<NUM_SQUARES; i++)
+{
+id = "sq"+i;
+boxes[i] = id;
+document.write( "<div class='square' id='" + id + "'></div>" );
+((sqr) => {
+        document.getElementById(sqr).addEventListener('click', () => {
+            if(!gameOver && document.getElementById(sqr).innerHTML === '')
+            {
+                document.getElementById(sqr).innerHTML = playerTurn;
+                if(playerTurn == 'X')
+                {
+                    playerTurn = 'O';
+                    document.getElementById("turn").innerHTML = "Player O Turn";
+                }
+                else
+                {
+                    playerTurn = 'X';
+                    document.getElementById("turn").innerHTML = "Player X Turn";
+                }
+                alert("You chose square " + sqr.substring(2,3));
+                movesUpdate();
+                moveCount++;
+                winConditionsUpdate();
+                console.log(winConditions[1]);
+                for(i = 0; i < 9; i++)
+                {
+                    if(winConditions[i] === "OOO")
+                    {
+                        document.getElementById("winCondition").innerHTML = "Player O Wins!";
+                        moveCount = 0;
+                        gameOver = true;
+                    }
+                    else if(winConditions[i] === "XXX")
+                    {
+                        document.getElementById("winCondition").innerHTML = "Player X Wins!";
+                        moveCount = 0;
+                        gameOver = true;
+                    }
+                    else if(moveCount === 9)
+                    {
+                        document.getElementById("winCondition").innerHTML = "Stalemate!";
+                        gameOver = true;
+                        moveCount = 0;
+                    }
+
+                }
+            }
+        });
+    })(id);
+}
+
+
+function clearGame()
+{
+    gameOver = false;
+    moveCount = 0;
+    document.getElementById("winCondition").innerHTML = '';
+    for(i=0; i < NUM_SQUARES; i++)
+    {
+        document.getElementById("sq" + i).innerHTML = '';
+    }
+    for(i=0; i < NUM_SQUARES; i++)
+    {
+        moves[i] = '-';
+    }
+    playerTurn = 'X';
+    if(Math.random() >= 0.5)
+    {
+        playerTurn = 'O';
+        document.getElementById("turn").innerHTML = "Player O Turn";
+    }
+    else
+    {
+        playerTurn = 'X';
+        document.getElementById("turn").innerHTML = "Player X Turn";
+    }
+}
+
+</script>
+</div>
+<br>
+<div class = 'winCondition' id = "winCondition"></div>
+<br>
+<button type="button" class = "startGame" onclick = "clearGame()">Start Game</button>
+</head>
